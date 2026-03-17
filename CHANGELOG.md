@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.1.0-alpha.2
+
+Unreleased follow-up after `0.1.0-alpha.1`.
+
+- add npm publish workflow for manual dispatch and release-driven publishing
+- add npm publishing guide
+- ensure repository-level `.gitignore` re-includes tracked docs even when a global ignore excludes `docs/`
+- track the core reference docs in git
+
 ## 0.1.0-alpha.1
 
 Initial alpha release of the repository foundation and v1 execution slice.
