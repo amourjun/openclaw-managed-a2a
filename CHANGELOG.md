@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.1.0-alpha.3
+
+Unreleased follow-up after `0.1.0-alpha.2`.
+
 ## 0.1.0-alpha.2
 
 Unreleased follow-up after `0.1.0-alpha.1`.
