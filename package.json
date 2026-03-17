@@ -1,0 +1,61 @@
+{
+  "name": "openclaw-managed-a2a",
+  "version": "0.1.0",
+  "description": "Managed A2A plugin for OpenClaw with governed single-turn delegation for trusted domain-agent deployments",
+  "type": "module",
+  "main": "index.ts",
+  "license": "MIT",
+  "files": [
+    "index.ts",
+    "src/**/*.ts",
+    "docs/",
+    "examples/",
+    "openclaw.plugin.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "pack:dry-run": "npm pack --dry-run",
+    "check": "npm run typecheck && npm run test",
+    "spec:validate": "npx -y @fission-ai/openspec validate --all --strict",
+    "ci": "npm run check && npm run pack:dry-run && npm run spec:validate"
+  },
+  "keywords": [
+    "openclaw",
+    "openclaw-plugin",
+    "a2a",
+    "agent-to-agent",
+    "multi-agent",
+    "delegation"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amourjun/openclaw-managed-a2a.git"
+  },
+  "homepage": "https://github.com/amourjun/openclaw-managed-a2a#readme",
+  "bugs": {
+    "url": "https://github.com/amourjun/openclaw-managed-a2a/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "openclaw": {
+    "extensions": [
+      "./index.ts"
+    ]
+  },
+  "dependencies": {
+    "@sinclair/typebox": "0.34.48"
+  },
+  "devDependencies": {
+    "@types/node": "^24.6.1",
+    "openclaw": "2026.3.13",
+    "typescript": "^5.7.3",
+    "vitest": "^3.2.4"
+  },
+  "peerDependencies": {
+    "openclaw": ">=2026.3.13 <2026.4.0"
+  }
+}

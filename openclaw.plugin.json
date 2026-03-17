@@ -1,0 +1,41 @@
+{
+  "id": "managed-a2a",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "preferredAdapter": {
+        "type": "string",
+        "enum": [
+          "auto",
+          "runtime_subagent",
+          "cli_fallback"
+        ]
+      },
+      "allowCliFallback": {
+        "type": "boolean"
+      },
+      "defaultTtlSeconds": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 3600
+      },
+      "maxTtlSeconds": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 3600
+      },
+      "defaultTimeoutSeconds": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 3600
+      },
+      "auditDir": {
+        "type": "string"
+      }
+    }
+  }
+}

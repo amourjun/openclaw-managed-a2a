@@ -1,0 +1,18 @@
+{
+  // Minimal example for loading the plugin from a local workspace checkout.
+  "plugins": {
+    "entries": {
+      "managed-a2a": {
+        "source": "/absolute/path/to/openclaw-managed-a2a",
+        "config": {
+          "enabled": true,
+          "preferredAdapter": "auto",
+          "allowCliFallback": true,
+          "defaultTtlSeconds": 30,
+          "maxTtlSeconds": 300,
+          "defaultTimeoutSeconds": 20
+        }
+      }
+    }
+  }
+}

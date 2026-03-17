@@ -1,0 +1,54 @@
+name: Feature Request
+description: Propose a new managed A2A capability or repository improvement.
+title: "[Proposal] "
+labels:
+  - proposal
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for new capabilities, protocol changes, compatibility features, or roadmap requests.
+        Larger changes should end up as an OpenSpec proposal before implementation.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What operator, integrator, or maintainer problem should be solved?
+      placeholder: Describe the gap or pain point.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed Change
+      description: Describe the capability, interface, or workflow you want.
+    validations:
+      required: true
+  - type: textarea
+    id: non_goals
+    attributes:
+      label: Non-Goals
+      description: What should this request explicitly avoid?
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Protocol contract
+        - Transport adapter
+        - Compatibility probe
+        - Audit and diagnostics
+        - Channel adapter
+        - Docs and repository workflow
+    validations:
+      required: true
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Compatibility Considerations
+      description: Explain any expected impact on OpenClaw versions, official APIs, or internal shims.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Include relevant official primitives, skill-only approaches, or external tools you evaluated.

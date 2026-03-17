@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/amourjun/openclaw-managed-a2a/security/policy
+    about: Review the security policy before reporting sensitive issues.
+  - name: OpenSpec proposals
+    url: https://github.com/amourjun/openclaw-managed-a2a/tree/main/openspec
+    about: Review the current proposals and accepted specs before suggesting architecture work.
