@@ -1,11 +1,12 @@
 {
   "name": "openclaw-managed-a2a",
-  "version": "0.1.0",
+  "version": "0.1.0-alpha.1",
   "description": "Managed A2A plugin for OpenClaw with governed single-turn delegation for trusted domain-agent deployments",
   "type": "module",
   "main": "index.ts",
   "license": "MIT",
   "files": [
+    "CHANGELOG.md",
     "index.ts",
     "src/**/*.ts",
     "docs/",
