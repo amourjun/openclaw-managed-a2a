@@ -295,6 +295,7 @@ channel/domain adapters
 - [V1 implementation slice](./docs/v1-implementation-slice.md)
 - [Smoke test guide](./docs/smoke-test.md)
 - [Release checklist](./docs/release-checklist.md)
+- [Publish to npm](./docs/publish-npm.md)
 
 ## OpenSpec
 
