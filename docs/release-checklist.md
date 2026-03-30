@@ -95,4 +95,5 @@ After release, verify:
 - Dependabot is still configured for both npm and GitHub Actions updates
 - the label sync workflow still matches [`.github/labels.json`](../.github/labels.json)
 - generated GitHub release notes are categorized sensibly through [`.github/release.yml`](../.github/release.yml)
+- npm dist-tags (`alpha`, `latest`) match the intended release policy for that cut
 - operators can reproduce the smoke test with the released artifact

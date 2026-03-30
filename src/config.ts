@@ -14,6 +14,10 @@ export type ManagedA2AResolvedConfig = {
       registryPath?: string;
       toolName: string;
     };
+    telegram: {
+      enabled: boolean;
+      toolName: string;
+    };
   };
 };
 
@@ -77,6 +81,15 @@ export function resolveManagedA2APluginConfig(
   const feishuToolName =
     readNonEmptyString(rawFeishuAdapter?.toolName) ?? MANAGED_A2A_DEFAULTS.channelAdapters.feishu.toolName;
   const feishuRegistryPath = readNonEmptyString(rawFeishuAdapter?.registryPath);
+  const rawTelegramAdapter =
+    rawChannelAdapters?.telegram &&
+    typeof rawChannelAdapters.telegram === "object" &&
+    !Array.isArray(rawChannelAdapters.telegram)
+      ? (rawChannelAdapters.telegram as Record<string, unknown>)
+      : undefined;
+  const telegramToolName =
+    readNonEmptyString(rawTelegramAdapter?.toolName) ??
+    MANAGED_A2A_DEFAULTS.channelAdapters.telegram.toolName;
 
   return {
     enabled: readBoolean(raw?.enabled, MANAGED_A2A_DEFAULTS.enabled),
@@ -94,6 +107,13 @@ export function resolveManagedA2APluginConfig(
         ),
         toolName: feishuToolName,
         ...(feishuRegistryPath ? { registryPath: feishuRegistryPath } : {}),
+      },
+      telegram: {
+        enabled: readBoolean(
+          rawTelegramAdapter?.enabled,
+          MANAGED_A2A_DEFAULTS.channelAdapters.telegram.enabled,
+        ),
+        toolName: telegramToolName,
       },
     },
   };

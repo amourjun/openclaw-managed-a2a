@@ -24,6 +24,10 @@
               "enabled": false,
               "toolName": "managed_a2a_feishu_delegate",
               "registryPath": "~/.openclaw/domain-agent/feishu-domain-registry.json"
+            },
+            "telegram": {
+              "enabled": false,
+              "toolName": "managed_a2a_telegram_delegate"
             }
           }
         }

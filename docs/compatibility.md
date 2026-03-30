@@ -4,7 +4,7 @@
 
 This document describes the intended compatibility strategy for `openclaw-managed-a2a`.
 
-- It is a design-time compatibility model, not yet a release promise.
+- It started as a design-time compatibility model and now includes the first published release matrix row.
 - The goal is to keep the managed collaboration contract stable while transport implementations evolve.
 
 ## Compatibility Philosophy
@@ -84,7 +84,7 @@ Once the first release exists, each release should publish a matrix like this:
 
 | Plugin Version | OpenClaw Version Range | Preferred Adapter | Supported Fallback | Notes |
 |---|---|---|---|---|
-| `0.x.y` | `TBD` | `TBD` | `TBD` | Initial public matrix not published yet |
+| `0.1.0-alpha.4` | `>=2026.3.13 <2026.4.0` | `RuntimeSubagentAdapter` | `CliFallbackAdapter` | Validated in local shadow profile with positive and negative smoke paths |
 
 Until then, compatibility should be described as:
 

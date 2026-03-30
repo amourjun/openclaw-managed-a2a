@@ -21,6 +21,7 @@ export * from "./src/adapters/selector.js";
 export * from "./src/channel-adapters/types.js";
 export * from "./src/channel-adapters/registry.js";
 export * from "./src/channel-adapters/feishu.js";
+export * from "./src/channel-adapters/telegram.js";
 export * from "./src/probes/capabilities.js";
 
 const plugin = {

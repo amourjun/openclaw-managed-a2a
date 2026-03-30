@@ -14,6 +14,18 @@ const ManagedA2AFeishuAdapterConfigSchema = Type.Object(
   { additionalProperties: false },
 );
 
+const ManagedA2ATelegramAdapterConfigSchema = Type.Object(
+  {
+    enabled: Type.Optional(
+      Type.Boolean({ default: MANAGED_A2A_DEFAULTS.channelAdapters.telegram.enabled }),
+    ),
+    toolName: Type.Optional(
+      Type.String({ default: MANAGED_A2A_DEFAULTS.channelAdapters.telegram.toolName }),
+    ),
+  },
+  { additionalProperties: false },
+);
+
 export const ManagedA2APluginConfigSchema = Type.Object(
   {
     enabled: Type.Optional(Type.Boolean({ default: MANAGED_A2A_DEFAULTS.enabled })),
@@ -52,6 +64,7 @@ export const ManagedA2APluginConfigSchema = Type.Object(
       Type.Object(
         {
           feishu: Type.Optional(ManagedA2AFeishuAdapterConfigSchema),
+          telegram: Type.Optional(ManagedA2ATelegramAdapterConfigSchema),
         },
         { additionalProperties: false },
       ),
@@ -83,6 +96,14 @@ export const managedA2aPluginConfigSchemaJson = {
           properties: {
             enabled: { type: "boolean" },
             registryPath: { type: "string" },
+            toolName: { type: "string" },
+          },
+        },
+        telegram: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            enabled: { type: "boolean" },
             toolName: { type: "string" },
           },
         },

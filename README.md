@@ -14,7 +14,8 @@ This repository is in foundation stage.
 
 - Product positioning and architecture are defined first through OpenSpec.
 - The first milestone is a stable managed collaboration contract plus transport adapters.
-- No production release is published yet.
+- Stable production release is not published yet.
+- The latest pre-release is `0.1.0-alpha.4` on npm and GitHub Releases.
 
 ## Repository Operations
 
@@ -43,6 +44,7 @@ The repository now includes a working v1 execution slice for trusted intra-insta
 - explicit local CLI fallback
 - a channel/domain adapter SPI above the core contract
 - a reference Feishu/domain adapter and compatibility wrapper
+- a reference Telegram compatibility wrapper skeleton above the same core path
 - normalized result and error payloads
 - persisted audit traces
 - focused unit and execution-path tests
@@ -113,6 +115,7 @@ The core plugin remains IM-agnostic.
 - `managed_a2a_delegate` is the canonical normalized core entrypoint
 - channel/domain adapters resolve requester identity, target identity, and source metadata above that core path
 - the current repository ships a Feishu reference adapter for cutover and validation work
+- the current repository also ships a Telegram reference wrapper skeleton to keep adapter onboarding path explicit
 - the same SPI is intended to support future adapters such as Telegram, Slack, or internal channel-specific wrappers without changing the core contract
 
 ## Why This Exists

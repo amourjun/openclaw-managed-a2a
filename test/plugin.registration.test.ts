@@ -97,4 +97,33 @@ describe("managed-a2a plugin registration", () => {
     expect(registeredToolNames).toContain("managed_a2a_delegate");
     expect(registeredToolNames).toContain("feishu_domain_collab_request_v2");
   });
+
+  it("registers the reference Telegram adapter tool when enabled", () => {
+    const registeredToolNames: string[] = [];
+    const runtime = {} as OpenClawPluginApi["runtime"];
+
+    const api = createTestPluginApi({
+      id: "managed-a2a",
+      name: "Managed A2A",
+      source: "test",
+      config: {},
+      runtime,
+      pluginConfig: {
+        channelAdapters: {
+          telegram: {
+            enabled: true,
+            toolName: "telegram_domain_collab_request_v1",
+          },
+        },
+      },
+      registerTool(tool) {
+        registeredToolNames.push((tool as { name?: string }).name ?? "unknown");
+      },
+    });
+
+    plugin.register(api);
+
+    expect(registeredToolNames).toContain("managed_a2a_delegate");
+    expect(registeredToolNames).toContain("telegram_domain_collab_request_v1");
+  });
 });

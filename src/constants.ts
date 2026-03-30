@@ -6,6 +6,8 @@ export const MANAGED_A2A_PLUGIN_DESCRIPTION =
 export const MANAGED_A2A_DELEGATE_TOOL_NAME = "managed_a2a_delegate";
 export const MANAGED_A2A_FEISHU_ADAPTER_ID = "feishu";
 export const MANAGED_A2A_FEISHU_DELEGATE_TOOL_NAME = "managed_a2a_feishu_delegate";
+export const MANAGED_A2A_TELEGRAM_ADAPTER_ID = "telegram";
+export const MANAGED_A2A_TELEGRAM_DELEGATE_TOOL_NAME = "managed_a2a_telegram_delegate";
 export const MANAGED_A2A_SUPPORTED_OPENCLAW_RANGE = ">=2026.3.13 <2026.4.0";
 
 export const managedA2APreferredAdapters = [
@@ -27,6 +29,10 @@ export const MANAGED_A2A_DEFAULTS = {
     feishu: {
       enabled: false,
       toolName: MANAGED_A2A_FEISHU_DELEGATE_TOOL_NAME,
+    },
+    telegram: {
+      enabled: false,
+      toolName: MANAGED_A2A_TELEGRAM_DELEGATE_TOOL_NAME,
     },
   },
 };

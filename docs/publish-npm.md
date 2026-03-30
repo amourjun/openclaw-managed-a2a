@@ -5,7 +5,7 @@ This repository is prepared for npm publishing, but actual publishing still requ
 ## Current State
 
 - npm package name: `openclaw-managed-a2a`
-- current version: `0.1.0-alpha.3`
+- current version: `0.1.0-alpha.4`
 - npm availability and auth status should be verified at release time
 
 ## Recommended Path
@@ -29,6 +29,11 @@ Dist-tag behavior:
 - release prerelease -> `alpha`
 - release stable -> `latest`
 - manual workflow dispatch -> uses the provided `dist_tag`
+
+Current dist-tags (after `0.1.0-alpha.4`):
+
+- `alpha` -> `0.1.0-alpha.4`
+- `latest` -> `0.1.0-alpha.4`
 
 ## Prerequisites
 
@@ -56,11 +61,19 @@ npm publish --access public --tag latest
 
 If you want provenance in a local flow, prefer the GitHub Actions path instead.
 
+If your npm account uses security keys for 2FA, npm CLI may require an interactive browser verification URL during publish or dist-tag updates.
+
 ## Suggested Version Flow
 
 - `0.1.0-alpha.x` for early repository and integration validation
 - `0.1.0-beta.x` once real OpenClaw installs are validated repeatedly
 - `0.1.0` when the public installation and compatibility story is stable
+
+## Dist-Tag Policy
+
+- During pre-`1.0.0`, `alpha` always points to the newest pre-release.
+- `latest` may be manually promoted to the newest pre-release when maintainers want default installs to track the active alpha line.
+- Once the first stable `0.1.0` is published, `latest` should only track stable releases.
 
 ## Release Sequence
 
@@ -81,4 +94,9 @@ Current draft release notes reference:
 
 ## Current Blocker
 
-At the moment, repository Actions are blocked by the GitHub account billing issue, so the workflow is configured but will not execute until that account issue is resolved.
+At the moment, repository Actions are blocked by the GitHub account billing issue, so the workflow is configured but publish jobs do not start until that account issue is resolved.
+
+Observed on `v0.1.0-alpha.4`:
+
+- GitHub Actions run `Publish npm` was rejected before job start with billing-lock annotation
+- release and npm publish were completed manually as fallback

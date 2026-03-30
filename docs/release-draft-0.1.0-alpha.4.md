@@ -1,6 +1,6 @@
 # Release Draft: 0.1.0-alpha.4
 
-Status: draft
+Status: published as `v0.1.0-alpha.4` (pre-release) on 2026-03-30
 
 Version target: `0.1.0-alpha.4`
 
