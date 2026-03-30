@@ -10,7 +10,9 @@ This repository is prepared for npm publishing, but actual publishing still requ
 
 ## Recommended Path
 
-Prefer GitHub Actions trusted publishing once GitHub Actions is available for the repository account again.
+Current default is manual publish.
+
+Use GitHub Actions trusted publishing once GitHub Actions billing lock is resolved.
 
 The repository already includes:
 
@@ -26,9 +28,7 @@ The repository already includes:
 
 Dist-tag behavior:
 
-- release prerelease -> `alpha`
-- release stable -> `latest`
-- manual workflow dispatch -> uses the provided `dist_tag`
+- workflow dispatch -> uses the provided `dist_tag`
 
 Current dist-tags (after `0.1.0-alpha.4`):
 
@@ -44,6 +44,8 @@ Before the workflow can publish successfully:
 3. the version in `package.json` must not already exist on npm
 
 ## Manual Publish Path
+
+This is the active path right now.
 
 If you want to publish manually from a local machine:
 
@@ -94,7 +96,7 @@ Current draft release notes reference:
 
 ## Current Blocker
 
-At the moment, repository Actions are blocked by the GitHub account billing issue, so the workflow is configured but publish jobs do not start until that account issue is resolved.
+At the moment, repository Actions are blocked by the GitHub account billing issue, so `publish-npm` is configured as manual-dispatch only and release cuts should use the manual publish path.
 
 Observed on `v0.1.0-alpha.4`:
 

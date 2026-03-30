@@ -7,9 +7,6 @@ on:
         description: "npm dist-tag to publish under"
         required: false
         default: "alpha"
-  release:
-    types:
-      - published
 
 jobs:
   publish:
@@ -37,14 +34,7 @@ jobs:
       - name: Resolve npm dist-tag
         id: dist_tag
         shell: bash
-        run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "value=${{ github.event.inputs.dist_tag }}" >> "$GITHUB_OUTPUT"
-          elif [[ "${{ github.event.release.prerelease }}" == "true" ]]; then
-            echo "value=alpha" >> "$GITHUB_OUTPUT"
-          else
-            echo "value=latest" >> "$GITHUB_OUTPUT"
-          fi
+        run: echo "value=${{ github.event.inputs.dist_tag }}" >> "$GITHUB_OUTPUT"
 
       - name: Publish to npm
         run: npm publish --provenance --access public --tag "${{ steps.dist_tag.outputs.value }}"
