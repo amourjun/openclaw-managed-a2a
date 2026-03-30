@@ -1,5 +1,11 @@
 # openclaw-managed-a2a
 
+[![Validate](https://github.com/amourjun/openclaw-managed-a2a/actions/workflows/validate.yml/badge.svg)](https://github.com/amourjun/openclaw-managed-a2a/actions/workflows/validate.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
+[![OpenClaw Compatibility](https://img.shields.io/badge/OpenClaw-%3E%3D2026.3.13%20%3C2026.4.0-1f6feb)](./docs/compatibility.md)
+[![Status: Foundation](https://img.shields.io/badge/status-foundation-fb8c00)](./openspec)
+[![Support Guide](https://img.shields.io/badge/support-SUPPORT.md-24292f)](./SUPPORT.md)
+
 Managed A2A plugin for OpenClaw: a policy-aware, auditable, compatibility-conscious collaboration layer built on top of native A2A, session, and subagent primitives.
 
 ## Status
@@ -10,12 +16,33 @@ This repository is in foundation stage.
 - The first milestone is a stable managed collaboration contract plus transport adapters.
 - No production release is published yet.
 
+## Repository Operations
+
+The repository already includes the baseline public-maintainer workflows:
+
+- GitHub Actions validation on pull requests and `main`
+- release packaging from `v*` tags
+- npm publish flow for manual or release-driven publish
+- declarative repository labels with sync workflow
+- issue forms for bug reports, feature requests, and OpenClaw compatibility regressions
+- Dependabot updates for npm dependencies and GitHub Actions workflows
+
+For version-sensitive behavior, start with:
+
+- [`docs/compatibility.md`](./docs/compatibility.md)
+- [`.github/labels.json`](./.github/labels.json)
+- [`docs/release-rehearsal.md`](./docs/release-rehearsal.md)
+- [`SUPPORT.md`](./SUPPORT.md)
+- the Compatibility Regression issue form when a new OpenClaw version or adapter path breaks
+
 ## Current State
 
 The repository now includes a working v1 execution slice for trusted intra-instance single-turn delegation:
 
 - `runtime_subagent` as the preferred adapter
 - explicit local CLI fallback
+- a channel/domain adapter SPI above the core contract
+- a reference Feishu/domain adapter and compatibility wrapper
 - normalized result and error payloads
 - persisted audit traces
 - focused unit and execution-path tests
@@ -45,9 +72,20 @@ This runs:
 
 ### 3. Load the Plugin in OpenClaw
 
+Recommended local install:
+
+```bash
+openclaw plugins install -l /absolute/path/to/openclaw-managed-a2a
+```
+
 Use the example config as a starting point:
 
 - [`examples/openclaw.managed-a2a.jsonc`](./examples/openclaw.managed-a2a.jsonc)
+
+Important:
+
+- the example uses the config shape that OpenClaw `2026.3.13` accepts for direct local-path loading
+- `managed-a2a` registers its tools as optional, so the caller agent must explicitly allow the plugin id or tool names in `agents.list[*].tools.allow`
 
 Then restart the OpenClaw gateway.
 
@@ -56,6 +94,26 @@ Then restart the OpenClaw gateway.
 Follow:
 
 - [`docs/smoke-test.md`](./docs/smoke-test.md)
+- [`docs/shadow-profile.md`](./docs/shadow-profile.md) for an isolated local validation profile that does not reuse production Feishu traffic
+
+Quick commands:
+
+```bash
+npm run smoke:shadow:setup
+npm run smoke:shadow
+npm run smoke:shadow:negative
+```
+
+If you are upgrading OpenClaw or validating a compatibility regression, prefer attaching `npm run smoke:shadow:full` output to the issue or pull request.
+
+## Channel Adapter SPI
+
+The core plugin remains IM-agnostic.
+
+- `managed_a2a_delegate` is the canonical normalized core entrypoint
+- channel/domain adapters resolve requester identity, target identity, and source metadata above that core path
+- the current repository ships a Feishu reference adapter for cutover and validation work
+- the same SPI is intended to support future adapters such as Telegram, Slack, or internal channel-specific wrappers without changing the core contract
 
 ## Why This Exists
 

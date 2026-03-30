@@ -1,0 +1,95 @@
+name: Compatibility Regression
+description: Report an OpenClaw version regression, adapter breakage, or compatibility probe failure.
+title: "[Compatibility] "
+labels:
+  - compatibility
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template when a new OpenClaw version, runtime surface, or managed-a2a adapter path stops behaving as expected.
+        Before filing, review `docs/compatibility.md` and, if possible, attach the shortest validation output that reproduces the problem.
+  - type: input
+    id: openclaw_version
+    attributes:
+      label: OpenClaw Version
+      placeholder: 2026.3.13
+    validations:
+      required: true
+  - type: input
+    id: plugin_version
+    attributes:
+      label: Plugin Version or Commit
+      placeholder: 0.1.0-alpha.3 or a git commit SHA
+    validations:
+      required: true
+  - type: dropdown
+    id: install_mode
+    attributes:
+      label: Install Mode
+      options:
+        - Local linked checkout
+        - npm package
+        - Shadow profile
+        - Embedded in another extension repo
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: adapter_path
+    attributes:
+      label: Failing Path
+      description: Pick the closest path even if you are not fully certain.
+      options:
+        - runtime_subagent
+        - cli_fallback
+        - Feishu channel adapter
+        - Plugin load or config schema
+        - Unknown
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What compatibility expectation broke?
+      placeholder: A short description of the regression.
+    validations:
+      required: true
+  - type: textarea
+    id: commands
+    attributes:
+      label: Validation Commands
+      description: Include the exact commands you ran, such as `npm run ci` or `npm run smoke:shadow:full`.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Result
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Result
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Logs, Diagnostics, or Probe Output
+      description: Paste the shortest relevant excerpt.
+      render: shell
+  - type: textarea
+    id: impact
+    attributes:
+      label: Operator Impact
+      description: Explain whether this blocks primary delegation, only affects fallback, or is limited to diagnostics/tooling.
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional Notes
+      description: Include any scope, gateway, or environment-specific observations.

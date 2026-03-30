@@ -1,0 +1,97 @@
+name: Label Sync
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/labels.json"
+      - ".github/workflows/label-sync.yml"
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: label-sync-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sync-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Sync declared labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('node:fs');
+            const path = require('node:path');
+
+            const labelsPath = path.join(process.env.GITHUB_WORKSPACE, '.github', 'labels.json');
+            const raw = fs.readFileSync(labelsPath, 'utf8');
+            const declaredLabels = JSON.parse(raw);
+
+            if (!Array.isArray(declaredLabels) || declaredLabels.length === 0) {
+              core.setFailed('Expected .github/labels.json to contain a non-empty array.');
+              return;
+            }
+
+            const { owner, repo } = context.repo;
+            const existingLabels = await github.paginate(github.rest.issues.listLabelsForRepo, {
+              owner,
+              repo,
+              per_page: 100,
+            });
+            const existingByName = new Map(existingLabels.map((label) => [label.name, label]));
+
+            const summaryRows = [["Label", "Action", "Color", "Description"]];
+
+            for (const entry of declaredLabels) {
+              const name = String(entry.name ?? '').trim();
+              const color = String(entry.color ?? '').trim().replace(/^#/, '');
+              const description = String(entry.description ?? '').trim();
+
+              if (!name) {
+                core.setFailed('Each label entry must include a non-empty name.');
+                return;
+              }
+              if (!/^[0-9a-fA-F]{6}$/.test(color)) {
+                core.setFailed(`Label "${name}" has an invalid 6-digit hex color.`);
+                return;
+              }
+              if (!description) {
+                core.setFailed(`Label "${name}" must include a non-empty description.`);
+                return;
+              }
+
+              if (existingByName.has(name)) {
+                await github.rest.issues.updateLabel({
+                  owner,
+                  repo,
+                  name,
+                  new_name: name,
+                  color,
+                  description,
+                });
+                summaryRows.push([name, "updated", color, description]);
+              } else {
+                await github.rest.issues.createLabel({
+                  owner,
+                  repo,
+                  name,
+                  color,
+                  description,
+                });
+                summaryRows.push([name, "created", color, description]);
+              }
+            }
+
+            await core.summary
+              .addHeading('Label sync result')
+              .addRaw('Source of truth: `.github/labels.json`', true)
+              .addTable(summaryRows)
+              .write();

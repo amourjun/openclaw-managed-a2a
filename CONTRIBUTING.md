@@ -13,9 +13,10 @@ If your change introduces a new capability, changes architecture, affects compat
 ## Contribution Flow
 
 1. Open an issue for bugs, gaps, or ideas if one does not already exist.
-2. For feature work or architecture changes, create or update an OpenSpec proposal under `openspec/changes/`.
-3. Run validation locally before opening a pull request.
-4. Keep pull requests small and scoped to one capability or repository concern.
+2. Use the Compatibility Regression issue form when the problem is caused by an OpenClaw upgrade, adapter breakage, or runtime behavior change.
+3. For feature work or architecture changes, create or update an OpenSpec proposal under `openspec/changes/`.
+4. Run validation locally before opening a pull request.
+5. Keep pull requests small and scoped to one capability or repository concern.
 
 ## OpenSpec Rules
 
@@ -51,6 +52,12 @@ This covers:
 
 If your change needs environment-specific verification beyond that, include the extra commands and results in the pull request.
 
+If your change touches compatibility handling or dependency upgrades, also include:
+
+- the OpenClaw version under test
+- whether `runtime_subagent` and CLI fallback were both checked
+- `npm run smoke:shadow:full` output when feasible
+
 ## Pull Request Expectations
 
 Every pull request should explain:
@@ -60,6 +67,14 @@ Every pull request should explain:
 - which proposal or issue it relates to
 - what validation was run
 - whether OpenClaw compatibility or transport behavior is affected
+
+For repository-maintenance pull requests:
+
+- keep Dependabot-driven upgrades narrow
+- avoid mixing workflow/template changes with transport or protocol code unless tightly coupled
+- treat [`.github/labels.json`](./.github/labels.json) as the source of truth for the repository label baseline
+- keep [`.github/release.yml`](./.github/release.yml) aligned with the active labels taxonomy
+- if `.github/**` changes, ensure the GitHub metadata workflow stays green in CI
 
 ## Design Expectations
 

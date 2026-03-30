@@ -1,0 +1,95 @@
+name: GitHub Meta Validate
+
+on:
+  pull_request:
+    paths:
+      - ".github/**"
+      - "README.md"
+      - "CONTRIBUTING.md"
+      - "SECURITY.md"
+      - "SUPPORT.md"
+      - "docs/release-checklist.md"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/**"
+      - "README.md"
+      - "CONTRIBUTING.md"
+      - "SECURITY.md"
+      - "SUPPORT.md"
+      - "docs/release-checklist.md"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-meta-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-github-meta:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate GitHub YAML files
+        shell: bash
+        run: |
+          python3 -m pip install --disable-pip-version-check yamllint
+          find .github -type f \( -name '*.yml' -o -name '*.yaml' \) -print0 \
+            | xargs -0 yamllint -d '{extends: default, rules: {line-length: disable, truthy: disable}}'
+
+      - name: Validate GitHub label declaration
+        shell: bash
+        run: |
+          node -e '
+            const fs = require("node:fs");
+            const labels = JSON.parse(fs.readFileSync(".github/labels.json", "utf8"));
+            if (!Array.isArray(labels) || labels.length === 0) {
+              throw new Error("Expected .github/labels.json to contain a non-empty array.");
+            }
+            for (const label of labels) {
+              if (!label || typeof label !== "object") throw new Error("Each label entry must be an object.");
+              if (typeof label.name !== "string" || !label.name.trim()) throw new Error("Each label must include a non-empty name.");
+              if (typeof label.description !== "string" || !label.description.trim()) throw new Error(`Label ${label.name || "<unknown>"} must include a non-empty description.`);
+              if (typeof label.color !== "string" || !/^[0-9a-fA-F]{6}$/.test(label.color.replace(/^#/, ""))) {
+                throw new Error(`Label ${label.name || "<unknown>"} must include a 6-digit hex color.`);
+              }
+            }
+            console.log(`validated ${labels.length} labels`);
+          '
+
+      - name: Validate release-note label references
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          import yaml
+
+          labels = json.loads(Path(".github/labels.json").read_text())
+          declared = {entry["name"] for entry in labels}
+          release_config = yaml.safe_load(Path(".github/release.yml").read_text()) or {}
+          categories = ((release_config.get("changelog") or {}).get("categories") or [])
+
+          missing = []
+          for category in categories:
+            for label in category.get("labels") or []:
+              if label not in declared:
+                missing.append(label)
+
+          if missing:
+            raise SystemExit(f"release.yml references undeclared labels: {sorted(set(missing))}")
+
+          print(f"validated release label references against {len(declared)} declared labels")
+          PY
+
+      - name: Validate GitHub Actions workflows
+        uses: reviewdog/action-actionlint@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-check
+          fail_level: error
+          actionlint_flags: -color

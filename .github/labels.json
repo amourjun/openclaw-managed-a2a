@@ -1,0 +1,57 @@
+[
+  {
+    "name": "bug",
+    "color": "d73a4a",
+    "description": "Defect, regression, or operator-visible failure."
+  },
+  {
+    "name": "compatibility",
+    "color": "fb8c00",
+    "description": "OpenClaw version compatibility, runtime surface drift, or adapter regression."
+  },
+  {
+    "name": "proposal",
+    "color": "5319e7",
+    "description": "New capability, protocol change, or roadmap proposal."
+  },
+  {
+    "name": "documentation",
+    "color": "0075ca",
+    "description": "Documentation, examples, or maintainer guidance."
+  },
+  {
+    "name": "maintenance",
+    "color": "c2e0c6",
+    "description": "Repository maintenance, cleanup, or non-feature upkeep."
+  },
+  {
+    "name": "dependencies",
+    "color": "0366d6",
+    "description": "Dependency upgrades for npm packages or GitHub Actions."
+  },
+  {
+    "name": "ci",
+    "color": "1d76db",
+    "description": "CI, workflows, automation, or repository validation changes."
+  },
+  {
+    "name": "security",
+    "color": "b60205",
+    "description": "Security-sensitive hardening or vulnerability follow-up."
+  },
+  {
+    "name": "breaking-change",
+    "color": "b31d28",
+    "description": "Intentional behavior or interface change requiring upgrade attention."
+  },
+  {
+    "name": "good first issue",
+    "color": "7057ff",
+    "description": "Small, well-scoped issue suitable for first-time contributors."
+  },
+  {
+    "name": "help wanted",
+    "color": "008672",
+    "description": "Extra maintainer or community help would be useful."
+  }
+]

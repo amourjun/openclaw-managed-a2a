@@ -5,9 +5,8 @@ This repository is prepared for npm publishing, but actual publishing still requ
 ## Current State
 
 - npm package name: `openclaw-managed-a2a`
-- current version: `0.1.0-alpha.1`
-- package name is currently not taken on npm
-- this machine is not logged in to npm right now
+- current version: `0.1.0-alpha.3`
+- npm availability and auth status should be verified at release time
 
 ## Recommended Path
 
@@ -68,11 +67,17 @@ If you want provenance in a local flow, prefer the GitHub Actions path instead.
 Recommended order:
 
 1. update version and changelog
-2. run `npm run ci`
-3. create and push the release commit
-4. create and push a `v*` tag
-5. publish GitHub release
-6. publish to npm using either the workflow or manual fallback
+2. update or review the draft release notes document if you are using one
+3. run `npm run ci`
+4. rehearse the tag and artifact flow using [`./release-rehearsal.md`](./release-rehearsal.md)
+5. create and push the release commit
+6. create and push a `v*` tag
+7. publish GitHub release
+8. publish to npm using either the workflow or manual fallback
+
+Current draft release notes reference:
+
+- [`./release-draft-0.1.0-alpha.4.md`](./release-draft-0.1.0-alpha.4.md)
 
 ## Current Blocker
 

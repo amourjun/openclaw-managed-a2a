@@ -1,0 +1,33 @@
+changelog:
+  exclude:
+    labels:
+      - good first issue
+      - help wanted
+  categories:
+    - title: Breaking Changes
+      labels:
+        - breaking-change
+    - title: Compatibility
+      labels:
+        - compatibility
+    - title: Proposals and Product Direction
+      labels:
+        - proposal
+    - title: Security
+      labels:
+        - security
+    - title: CI and Automation
+      labels:
+        - ci
+    - title: Dependencies
+      labels:
+        - dependencies
+    - title: Documentation
+      labels:
+        - documentation
+    - title: Maintenance
+      labels:
+        - maintenance
+    - title: Bug Fixes
+      labels:
+        - bug
