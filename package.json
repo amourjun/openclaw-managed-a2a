@@ -1,6 +1,6 @@
 {
   "name": "openclaw-managed-a2a",
-  "version": "0.1.0-alpha.3",
+  "version": "0.1.0-alpha.4",
   "description": "Managed A2A plugin for OpenClaw with governed single-turn delegation for trusted domain-agent deployments",
   "type": "module",
   "main": "index.ts",
@@ -9,6 +9,7 @@
     "CHANGELOG.md",
     "index.ts",
     "src/**/*.ts",
+    "scripts/",
     "docs/",
     "examples/",
     "openclaw.plugin.json",
@@ -20,6 +21,10 @@
     "test": "vitest run",
     "pack:dry-run": "npm pack --dry-run",
     "check": "npm run typecheck && npm run test",
+    "smoke:shadow:setup": "node scripts/setup-shadow-profile.mjs",
+    "smoke:shadow": "node scripts/verify-shadow-smoke.mjs",
+    "smoke:shadow:negative": "node scripts/verify-shadow-failures.mjs",
+    "smoke:shadow:full": "npm run smoke:shadow && npm run smoke:shadow:negative",
     "spec:validate": "npx -y @fission-ai/openspec validate --all --strict",
     "ci": "npm run check && npm run pack:dry-run && npm run spec:validate"
   },

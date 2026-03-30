@@ -141,3 +141,7 @@ vite.config.ts.timestamp-*
 # This repository intentionally tracks documentation even if a global ignore excludes docs/.
 !docs/
 !docs/*.md
+
+# This repository intentionally tracks helper scripts even if a global ignore excludes scripts/.
+!scripts/
+!scripts/*.mjs

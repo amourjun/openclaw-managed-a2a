@@ -1,18 +1,45 @@
 {
   // Minimal example for loading the plugin from a local workspace checkout.
+  // This mirrors the config shape accepted by OpenClaw 2026.3.13 when you
+  // manage plugin loading directly in openclaw.json instead of using:
+  //   openclaw plugins install -l /absolute/path/to/openclaw-managed-a2a
   "plugins": {
+    "enabled": true,
+    "allow": ["managed-a2a"],
+    "load": {
+      "paths": ["/absolute/path/to/openclaw-managed-a2a"]
+    },
     "entries": {
       "managed-a2a": {
-        "source": "/absolute/path/to/openclaw-managed-a2a",
+        "enabled": true,
         "config": {
           "enabled": true,
           "preferredAdapter": "auto",
           "allowCliFallback": true,
           "defaultTtlSeconds": 30,
           "maxTtlSeconds": 300,
-          "defaultTimeoutSeconds": 20
+          "defaultTimeoutSeconds": 20,
+          "channelAdapters": {
+            "feishu": {
+              "enabled": false,
+              "toolName": "managed_a2a_feishu_delegate",
+              "registryPath": "~/.openclaw/domain-agent/feishu-domain-registry.json"
+            }
+          }
         }
       }
     }
+  },
+  "agents": {
+    "list": [
+      {
+        "id": "main",
+        "tools": {
+          // managed-a2a registers optional tools, so the caller agent must
+          // explicitly allow the plugin id (or the individual tool names).
+          "allow": ["managed-a2a"]
+        }
+      }
+    ]
   }
 }
