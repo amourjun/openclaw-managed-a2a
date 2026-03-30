@@ -13,6 +13,7 @@ export type ManagedA2AStatus = (typeof managedA2AStatuses)[number];
 
 export const managedA2AErrorCategories = [
   "invalid_request",
+  "resolution_failed",
   "policy_denied",
   "transport_unavailable",
   "transport_failed",

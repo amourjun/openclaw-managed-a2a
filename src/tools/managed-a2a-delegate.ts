@@ -1,64 +1,15 @@
 import { Type } from "@sinclair/typebox";
-import {
-  jsonResult,
-  type AnyAgentTool,
-  type OpenClawPluginApi,
-} from "openclaw/plugin-sdk";
-import { persistManagedA2AAuditTrace } from "../audit/store.js";
-import { buildManagedA2AAuditEvent, buildManagedA2AAuditRef } from "../audit/types.js";
+import { jsonResult, type AnyAgentTool, type OpenClawPluginApi } from "openclaw/plugin-sdk";
 import { resolveManagedA2APluginConfig } from "../config.js";
-import { MANAGED_A2A_DELEGATE_TOOL_NAME, MANAGED_A2A_SUPPORTED_OPENCLAW_RANGE } from "../constants.js";
+import { buildManagedA2ADisabledResult, executeManagedA2ARequest } from "../core-execution.js";
 import { ManagedA2AError, buildManagedA2AFailureResult } from "../errors.js";
+import { MANAGED_A2A_DELEGATE_TOOL_NAME } from "../constants.js";
 import { parseManagedA2ARequest } from "../policy/validate.js";
-import type { ManagedA2AAuditEvent } from "../audit/types.js";
-import type { ManagedA2AExecutionResult, ManagedA2ARequestEnvelope } from "../protocol/types.js";
-import { probeManagedA2ATransportCapabilities } from "../probes/capabilities.js";
 
-async function finalizeManagedA2AResult(params: {
-  api: OpenClawPluginApi;
-  config: ReturnType<typeof resolveManagedA2APluginConfig>;
-  request: ManagedA2ARequestEnvelope;
-  auditEvents: ManagedA2AAuditEvent[];
-  result: ManagedA2AExecutionResult;
-}): Promise<ManagedA2AExecutionResult> {
-  const diagnostics = {
-    ...(params.result.diagnostics ?? {}),
-    supported_version_range: MANAGED_A2A_SUPPORTED_OPENCLAW_RANGE,
-    audit_events: params.auditEvents,
-  };
-
-  let result: ManagedA2AExecutionResult = {
-    ...params.result,
-    diagnostics,
-  };
-
-  try {
-    const auditPath = await persistManagedA2AAuditTrace({
-      api: params.api,
-      config: params.config,
-      request: params.request,
-      result,
-      auditEvents: params.auditEvents,
-    });
-
-    result = {
-      ...result,
-      audit_ref: auditPath,
-      diagnostics: {
-        ...diagnostics,
-        details: {
-          ...(diagnostics.details ?? {}),
-          audit_path: auditPath,
-        },
-      },
-    };
-  } catch (error) {
-    params.api.logger.warn?.(
-      `managed-a2a: failed to persist audit trace (request_id=${params.request.request_id}, error=${error instanceof Error ? error.message : String(error)})`,
-    );
-  }
-
-  return result;
+function extractRequestId(params: Record<string, unknown>): string {
+  return typeof params.request_id === "string" && params.request_id.trim().length > 0
+    ? params.request_id.trim()
+    : "unknown";
 }
 
 export function createManagedA2ADelegateTool(api: OpenClawPluginApi): AnyAgentTool {
@@ -88,88 +39,16 @@ export function createManagedA2ADelegateTool(api: OpenClawPluginApi): AnyAgentTo
       const config = resolveManagedA2APluginConfig(api.pluginConfig);
 
       if (!config.enabled) {
-        return jsonResult(
-          buildManagedA2AFailureResult({
-            requestId: typeof params.request_id === "string" ? params.request_id : "unknown",
-            status: "rejected",
-            error: new ManagedA2AError(
-              "policy_denied",
-              "managed-a2a plugin is disabled by configuration",
-            ),
-            recommendation: "Enable the managed-a2a plugin before invoking managed delegation.",
-          }),
-        );
+        return jsonResult(buildManagedA2ADisabledResult(extractRequestId(params)));
       }
 
       try {
         const request = parseManagedA2ARequest(params, config);
-        const auditEvents = [
-          buildManagedA2AAuditEvent({
-            stage: "accepted",
-            request_id: request.request_id,
-            message: "Managed single-turn delegation request accepted",
-          }),
-        ];
-
-        const selection = await probeManagedA2ATransportCapabilities({
-          api,
-          config,
-          request,
-          auditEvents,
-        });
-
-        if (!selection.adapter) {
-          auditEvents.push(
-            buildManagedA2AAuditEvent({
-              stage: "failed",
-              request_id: request.request_id,
-              message: selection.reason,
-            }),
-          );
-
-          return jsonResult(
-            await finalizeManagedA2AResult({
-              api,
-              config,
-              request,
-              auditEvents,
-              result: buildManagedA2AFailureResult({
-                requestId: request.request_id,
-                status: "failed",
-                error: new ManagedA2AError("transport_unavailable", selection.reason),
-                diagnostics: {
-                  category: "transport_unavailable",
-                  reason: selection.reason,
-                  probes: selection.probes,
-                  details: {
-                    preferred_adapter: config.preferredAdapter,
-                    allow_cli_fallback: config.allowCliFallback,
-                  },
-                },
-              recommendation:
-                "Implement the primary adapter or wire the CLI fallback before using managed delegation end-to-end.",
-              auditRef: buildManagedA2AAuditRef(request.request_id),
-            }),
-            }),
-          );
-        }
-
-        auditEvents.push(
-          buildManagedA2AAuditEvent({
-            stage: selection.used_fallback ? "degraded" : "dispatched",
-            request_id: request.request_id,
-            adapter_id: selection.adapter.id,
-            message: selection.reason,
-          }),
-        );
-
         return jsonResult(
-          await finalizeManagedA2AResult({
+          await executeManagedA2ARequest({
             api,
             config,
             request,
-            auditEvents,
-            result: await selection.adapter.execute({ api, config, request, auditEvents }),
           }),
         );
       } catch (error) {
@@ -182,7 +61,7 @@ export function createManagedA2ADelegateTool(api: OpenClawPluginApi): AnyAgentTo
 
         return jsonResult(
           buildManagedA2AFailureResult({
-            requestId: typeof params.request_id === "string" ? params.request_id : "unknown",
+            requestId: extractRequestId(params),
             status:
               managedError.category === "policy_denied"
                 ? "rejected"

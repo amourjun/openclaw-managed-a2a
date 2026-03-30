@@ -33,6 +33,27 @@
         "minimum": 1,
         "maximum": 3600
       },
+      "channelAdapters": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "feishu": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "registryPath": {
+                "type": "string"
+              },
+              "toolName": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
       "auditDir": {
         "type": "string"
       }

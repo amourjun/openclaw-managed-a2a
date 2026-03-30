@@ -1,6 +1,19 @@
 import { Type, type Static } from "@sinclair/typebox";
 import { MANAGED_A2A_DEFAULTS, managedA2APreferredAdapters } from "./constants.js";
 
+const ManagedA2AFeishuAdapterConfigSchema = Type.Object(
+  {
+    enabled: Type.Optional(
+      Type.Boolean({ default: MANAGED_A2A_DEFAULTS.channelAdapters.feishu.enabled }),
+    ),
+    registryPath: Type.Optional(Type.String()),
+    toolName: Type.Optional(
+      Type.String({ default: MANAGED_A2A_DEFAULTS.channelAdapters.feishu.toolName }),
+    ),
+  },
+  { additionalProperties: false },
+);
+
 export const ManagedA2APluginConfigSchema = Type.Object(
   {
     enabled: Type.Optional(Type.Boolean({ default: MANAGED_A2A_DEFAULTS.enabled })),
@@ -35,6 +48,14 @@ export const ManagedA2APluginConfigSchema = Type.Object(
       }),
     ),
     auditDir: Type.Optional(Type.String()),
+    channelAdapters: Type.Optional(
+      Type.Object(
+        {
+          feishu: Type.Optional(ManagedA2AFeishuAdapterConfigSchema),
+        },
+        { additionalProperties: false },
+      ),
+    ),
   },
   { additionalProperties: false },
 );
@@ -52,5 +73,20 @@ export const managedA2aPluginConfigSchemaJson = {
     maxTtlSeconds: { type: "integer", minimum: 1, maximum: 3600 },
     defaultTimeoutSeconds: { type: "integer", minimum: 1, maximum: 3600 },
     auditDir: { type: "string" },
+    channelAdapters: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        feishu: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            enabled: { type: "boolean" },
+            registryPath: { type: "string" },
+            toolName: { type: "string" },
+          },
+        },
+      },
+    },
   },
 } as const;

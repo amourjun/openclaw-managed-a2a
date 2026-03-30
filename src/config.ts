@@ -8,6 +8,13 @@ export type ManagedA2AResolvedConfig = {
   maxTtlSeconds: number;
   defaultTimeoutSeconds: number;
   auditDir?: string;
+  channelAdapters: {
+    feishu: {
+      enabled: boolean;
+      registryPath?: string;
+      toolName: string;
+    };
+  };
 };
 
 function readBoolean(value: unknown, fallback: boolean): boolean {
@@ -25,6 +32,14 @@ function readPreferredAdapter(value: unknown): ManagedA2APreferredAdapter {
   return value === "runtime_subagent" || value === "cli_fallback" || value === "auto"
     ? value
     : MANAGED_A2A_DEFAULTS.preferredAdapter;
+}
+
+function readNonEmptyString(value: unknown): string | undefined {
+  if (typeof value !== "string") {
+    return undefined;
+  }
+  const normalized = value.trim();
+  return normalized.length > 0 ? normalized : undefined;
 }
 
 export function resolveManagedA2APluginConfig(
@@ -49,6 +64,19 @@ export function resolveManagedA2APluginConfig(
     typeof raw?.auditDir === "string" && raw.auditDir.trim().length > 0
       ? raw.auditDir.trim()
       : undefined;
+  const rawChannelAdapters =
+    raw?.channelAdapters && typeof raw.channelAdapters === "object" && !Array.isArray(raw.channelAdapters)
+      ? (raw.channelAdapters as Record<string, unknown>)
+      : undefined;
+  const rawFeishuAdapter =
+    rawChannelAdapters?.feishu &&
+    typeof rawChannelAdapters.feishu === "object" &&
+    !Array.isArray(rawChannelAdapters.feishu)
+      ? (rawChannelAdapters.feishu as Record<string, unknown>)
+      : undefined;
+  const feishuToolName =
+    readNonEmptyString(rawFeishuAdapter?.toolName) ?? MANAGED_A2A_DEFAULTS.channelAdapters.feishu.toolName;
+  const feishuRegistryPath = readNonEmptyString(rawFeishuAdapter?.registryPath);
 
   return {
     enabled: readBoolean(raw?.enabled, MANAGED_A2A_DEFAULTS.enabled),
@@ -58,5 +86,15 @@ export function resolveManagedA2APluginConfig(
     maxTtlSeconds,
     defaultTimeoutSeconds,
     ...(auditDir ? { auditDir } : {}),
+    channelAdapters: {
+      feishu: {
+        enabled: readBoolean(
+          rawFeishuAdapter?.enabled,
+          MANAGED_A2A_DEFAULTS.channelAdapters.feishu.enabled,
+        ),
+        toolName: feishuToolName,
+        ...(feishuRegistryPath ? { registryPath: feishuRegistryPath } : {}),
+      },
+    },
   };
 }
