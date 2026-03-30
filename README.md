@@ -1,5 +1,7 @@
 # openclaw-managed-a2a
 
+Language: English | [简体中文](./README.zh-CN.md)
+
 [![Validate](https://github.com/amourjun/openclaw-managed-a2a/actions/workflows/validate.yml/badge.svg)](https://github.com/amourjun/openclaw-managed-a2a/actions/workflows/validate.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
 [![OpenClaw Compatibility](https://img.shields.io/badge/OpenClaw-%3E%3D2026.3.13%20%3C2026.4.0-1f6feb)](./docs/compatibility.md)
