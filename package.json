@@ -53,7 +53,7 @@
     ]
   },
   "dependencies": {
-    "@sinclair/typebox": "0.34.48"
+    "@sinclair/typebox": "0.34.49"
   },
   "devDependencies": {
     "@types/node": "^24.6.1",
